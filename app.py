@@ -8,10 +8,6 @@ import plotly.express as px
 import streamlit as st
 
 
-# =====================================================
-# PAGE CONFIGURATION
-# =====================================================
-
 st.set_page_config(
     page_title="Food Spoilage Predictor",
     page_icon="🥬",
@@ -22,11 +18,6 @@ st.set_page_config(
 BASE_DIR = Path(__file__).resolve().parent
 MODEL_PATH = BASE_DIR / "model.pkl"
 DATA_PATH = BASE_DIR / "data" / "raw" / "data.csv"
-
-
-# =====================================================
-# CUSTOM STYLING
-# =====================================================
 
 st.markdown("""
 <style>
@@ -52,11 +43,6 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
-
-
-# =====================================================
-# LOAD MODEL AND DATASET
-# =====================================================
 
 @st.cache_resource
 def load_model():
@@ -95,11 +81,6 @@ except Exception as error:
     st.exception(error)
     st.stop()
 
-
-# =====================================================
-# SIDEBAR NAVIGATION
-# =====================================================
-
 st.sidebar.title("🥬 FoodSpoil AI")
 st.sidebar.caption("Food Supply Chain Intelligence")
 st.sidebar.divider()
@@ -117,10 +98,6 @@ page = st.sidebar.radio(
 st.sidebar.divider()
 st.sidebar.caption("Machine Learning Project | Ridge Regression")
 
-
-# =====================================================
-# DASHBOARD PAGE
-# =====================================================
 
 if page == "Dashboard":
 
@@ -205,10 +182,6 @@ if page == "Dashboard":
         hide_index=True
     )
 
-
-# =====================================================
-# PREDICTION PAGE
-# =====================================================
 
 elif page == "Predict Shelf Life":
 
@@ -403,19 +376,11 @@ elif page == "Predict Shelf Life":
 
                 st.success("Prediction generated successfully.")
 
-                st.warning(
-                    "This is an experimental ML estimate based on synthetic "
-                    "training data. It is not a food-safety assessment."
-                )
 
             except Exception as error:
                 st.error("Prediction failed.")
                 st.exception(error)
 
-
-# =====================================================
-# DATA ANALYSIS PAGE
-# =====================================================
 
 elif page == "Data Analysis":
 
@@ -512,9 +477,7 @@ elif page == "Data Analysis":
         st.plotly_chart(fig, use_container_width=True)
 
 
-# =====================================================
-# MODEL INFORMATION PAGE
-# =====================================================
+
 
 elif page == "Model Information":
 
@@ -572,15 +535,4 @@ elif page == "Model Information":
 
     st.divider()
 
-    st.subheader("Project Limitations")
 
-    st.warning(
-        "The model was trained on a synthetic dataset. Its performance "
-        "has not been validated using real-world food shipment data. "
-        "Predictions should be treated as experimental estimates, "
-        "not food quality or safety guarantees."
-    )
-
-    st.caption(
-        "Developed using Python, Pandas, Scikit-learn, Plotly and Streamlit."
-    )
