@@ -293,7 +293,7 @@ if page == "Predict Shelf Life":
 
             try:
 
-                prediction = float(model.predict(input_data)[0])
+                prediction = float(max(0, model.predict(input_data)[0]))
 
                 st.divider()
                 st.subheader("Prediction Result")
