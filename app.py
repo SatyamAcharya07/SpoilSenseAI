@@ -89,7 +89,6 @@ st.sidebar.divider()
 page = st.sidebar.radio(
     "Navigation",
     [
-        "Dashboard",
         "Predict Shelf Life",
         "Data Analysis"
     ]
@@ -99,7 +98,7 @@ st.sidebar.divider()
 st.sidebar.caption("Machine Learning Project | Ridge Regression")
 
 
-if page == "Dashboard":
+if page == "Predict Shelf Life":
 
     st.title("Food Supply Chain Dashboard")
 
@@ -111,81 +110,7 @@ if page == "Dashboard":
 
     st.divider()
 
-    total_shipments = len(df)
-    total_products = df["Product_Type"].nunique()
-    avg_shelf_life = df["Remaining_Shelf_Life_Hours"].mean()
-    avg_temperature = df["Avg_Temperature_C"].mean()
-
-    col1, col2, col3, col4 = st.columns(4)
-
-    col1.metric("Total Shipments", f"{total_shipments:,}")
-    col2.metric("Product Categories", total_products)
-    col3.metric("Average Shelf Life", f"{avg_shelf_life:.1f} hrs")
-    col4.metric("Average Temperature", f"{avg_temperature:.1f} °C")
-
-    st.divider()
-
-    left, right = st.columns(2)
-
-    with left:
-
-        st.subheader("Shipments by Product Type")
-
-        product_counts = (
-            df["Product_Type"]
-            .value_counts()
-            .reset_index()
-        )
-
-        product_counts.columns = ["Product Type", "Shipments"]
-
-        fig = px.bar(
-            product_counts,
-            x="Product Type",
-            y="Shipments",
-            color="Product Type",
-            title="Distribution of Product Categories"
-        )
-
-        st.plotly_chart(fig, use_container_width=True)
-
-    with right:
-
-        st.subheader("Shelf Life Distribution")
-
-        fig = px.histogram(
-            df,
-            x="Remaining_Shelf_Life_Hours",
-            nbins=30,
-            title="Remaining Shelf Life Across Shipments",
-            labels={
-                "Remaining_Shelf_Life_Hours": "Shelf Life (Hours)"
-            }
-        )
-
-        st.plotly_chart(fig, use_container_width=True)
-
-    st.subheader("Recent Shipment Records")
-
-    display_columns = [
-        "Shipment_ID",
-        "Product_Type",
-        "Storage_Condition",
-        "Avg_Temperature_C",
-        "Relative_Humidity_pct",
-        "Remaining_Shelf_Life_Hours"
-    ]
-
-    st.dataframe(
-        df[display_columns].head(10),
-        use_container_width=True,
-        hide_index=True
-    )
-
-
-elif page == "Predict Shelf Life":
-
-    st.title("🔍 Remaining Shelf Life Prediction")
+    st.subheader("🔍 Remaining Shelf Life Prediction")
 
     st.write(
         "Enter the shipment details to estimate the remaining "
@@ -387,11 +312,6 @@ elif page == "Predict Shelf Life":
 
                 st.success("Prediction generated successfully.")
 
-                st.caption(
-                    "This is an experimental estimate based on a synthetic dataset, "
-                    "not a validated real-world food safety measurement."
-                )
-
             except Exception as error:
 
                 st.error("Prediction failed.")
@@ -463,7 +383,6 @@ elif page == "Data Analysis":
         st.subheader("Correlation Heatmap")
 
         numerical_df = df.select_dtypes(include="number")
-
         correlation = numerical_df.corr()
 
         fig = px.imshow(
