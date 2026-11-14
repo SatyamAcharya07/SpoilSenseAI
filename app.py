@@ -1,3 +1,4 @@
+
 import pickle
 from pathlib import Path
 
@@ -18,10 +19,11 @@ BASE_DIR = Path(__file__).resolve().parent
 MODEL_PATH = BASE_DIR / "model.pkl"
 DATA_PATH = BASE_DIR / "data" / "raw" / "data.csv"
 
+
 st.markdown("""
 <style>
     .block-container {
-        padding-top: 2rem;
+        padding-top: 3rem;
         padding-bottom: 2rem;
     }
 
@@ -31,17 +33,13 @@ st.markdown("""
         border-radius: 10px;
     }
 
-    .main-title {
-        font-size: 2.2rem;
-        font-weight: 700;
-    }
-
     .subtitle {
         color: gray;
         font-size: 1rem;
     }
 </style>
 """, unsafe_allow_html=True)
+
 
 @st.cache_resource
 def load_model():
@@ -58,7 +56,8 @@ def load_dataset():
     df = df.drop_duplicates().copy()
 
     df["Dispatch_Date"] = pd.to_datetime(
-        df["Dispatch_Date"], errors="coerce"
+        df["Dispatch_Date"],
+        errors="coerce"
     )
 
     return df
@@ -72,15 +71,18 @@ if not DATA_PATH.exists():
     st.error("Dataset not found at data/raw/data.csv.")
     st.stop()
 
+
 try:
     model = load_model()
     df = load_dataset()
+
 except Exception as error:
     st.error("Unable to load the model or dataset.")
     st.exception(error)
     st.stop()
 
-st.sidebar.title("🥬 SpoilSense")
+
+st.sidebar.title("SpoilSense AI")
 st.sidebar.caption("Food Supply Chain Intelligence")
 st.sidebar.divider()
 
@@ -99,10 +101,7 @@ st.sidebar.caption("Machine Learning Project | Ridge Regression")
 
 if page == "Dashboard":
 
-    st.markdown(
-        '<p class="main-title">Food Supply Chain Dashboard</p>',
-        unsafe_allow_html=True
-    )
+    st.title("Food Supply Chain Dashboard")
 
     st.markdown(
         '<p class="subtitle">Monitor shipment data and understand '
@@ -129,6 +128,7 @@ if page == "Dashboard":
     left, right = st.columns(2)
 
     with left:
+
         st.subheader("Shipments by Product Type")
 
         product_counts = (
@@ -136,6 +136,7 @@ if page == "Dashboard":
             .value_counts()
             .reset_index()
         )
+
         product_counts.columns = ["Product Type", "Shipments"]
 
         fig = px.bar(
@@ -149,6 +150,7 @@ if page == "Dashboard":
         st.plotly_chart(fig, use_container_width=True)
 
     with right:
+
         st.subheader("Shelf Life Distribution")
 
         fig = px.histogram(
@@ -202,6 +204,7 @@ elif page == "Predict Shelf Life":
         col1, col2 = st.columns(2)
 
         with col1:
+
             product_type = st.selectbox(
                 "Product Type",
                 [
@@ -231,11 +234,14 @@ elif page == "Predict Shelf Life":
             )
 
         with col2:
+
             dispatch_month = st.selectbox(
                 "Dispatch Month",
                 list(range(1, 13)),
                 format_func=lambda x: pd.Timestamp(
-                    year=2025, month=x, day=1
+                    year=2025,
+                    month=x,
+                    day=1
                 ).strftime("%B")
             )
 
@@ -246,6 +252,7 @@ elif page == "Predict Shelf Life":
         col1, col2, col3 = st.columns(3)
 
         with col1:
+
             avg_temperature = st.number_input(
                 "Average Temperature (°C)",
                 min_value=-10.0,
@@ -261,6 +268,7 @@ elif page == "Predict Shelf Life":
             )
 
         with col2:
+
             max_temperature = st.number_input(
                 "Maximum Temperature (°C)",
                 min_value=-10.0,
@@ -276,6 +284,7 @@ elif page == "Predict Shelf Life":
             )
 
         with col3:
+
             humidity = st.number_input(
                 "Relative Humidity (%)",
                 min_value=0.0,
@@ -290,6 +299,7 @@ elif page == "Predict Shelf Life":
         col1, col2 = st.columns(2)
 
         with col1:
+
             transit_elapsed = st.number_input(
                 "Transit Elapsed (Hours)",
                 min_value=0.0,
@@ -305,6 +315,7 @@ elif page == "Predict Shelf Life":
             )
 
         with col2:
+
             hours_above_threshold = st.number_input(
                 "Hours Above Product Temperature Threshold",
                 min_value=0.0,
@@ -332,6 +343,7 @@ elif page == "Predict Shelf Life":
         if not (
             min_temperature <= avg_temperature <= max_temperature
         ):
+
             st.error(
                 "Invalid temperature values. Ensure Minimum ≤ Average ≤ Maximum."
             )
@@ -355,6 +367,7 @@ elif page == "Predict Shelf Life":
             }])
 
             try:
+
                 prediction = float(model.predict(input_data)[0])
 
                 st.divider()
@@ -374,8 +387,13 @@ elif page == "Predict Shelf Life":
 
                 st.success("Prediction generated successfully.")
 
+                st.caption(
+                    "This is an experimental estimate based on a synthetic dataset, "
+                    "not a validated real-world food safety measurement."
+                )
 
             except Exception as error:
+
                 st.error("Prediction failed.")
                 st.exception(error)
 
@@ -473,5 +491,3 @@ elif page == "Data Analysis":
         )
 
         st.plotly_chart(fig, use_container_width=True)
-
-
