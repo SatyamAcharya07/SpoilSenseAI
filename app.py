@@ -1,4 +1,3 @@
-
 import pickle
 from pathlib import Path
 
@@ -81,7 +80,7 @@ except Exception as error:
     st.exception(error)
     st.stop()
 
-st.sidebar.title("🥬 FoodSpoil AI")
+st.sidebar.title("🥬 SpoilSense")
 st.sidebar.caption("Food Supply Chain Intelligence")
 st.sidebar.divider()
 
@@ -90,8 +89,7 @@ page = st.sidebar.radio(
     [
         "Dashboard",
         "Predict Shelf Life",
-        "Data Analysis",
-        "Model Information"
+        "Data Analysis"
     ]
 )
 
@@ -475,64 +473,5 @@ elif page == "Data Analysis":
         )
 
         st.plotly_chart(fig, use_container_width=True)
-
-
-
-
-elif page == "Model Information":
-
-    st.title("🤖 Model Information")
-
-    st.write(
-        "This application uses a trained Ridge Regression pipeline "
-        "to estimate the remaining shelf life of food shipments."
-    )
-
-    st.subheader("Selected Algorithm")
-
-    st.markdown("### Ridge Regression")
-
-    st.write(
-        "Ridge Regression is a regularised linear regression algorithm. "
-        "It uses L2 regularisation to help control model coefficients."
-    )
-
-    st.divider()
-
-    st.subheader("Model Evaluation")
-
-    col1, col2, col3 = st.columns(3)
-
-    col1.metric("MAE", "7.71 Hours")
-    col2.metric("RMSE", "14.85 Hours")
-    col3.metric("R² Score", "0.9323")
-
-    st.caption(
-        "Metrics are from the notebook's reported test-set evaluation."
-    )
-
-    st.divider()
-
-    st.subheader("Model Input Features")
-
-    features = [
-        "Product_Type",
-        "Storage_Condition",
-        "Initial_Shelf_Life_Hours",
-        "Avg_Temperature_C",
-        "Min_Temperature_C",
-        "Max_Temperature_C",
-        "Temperature_Fluctuation_C",
-        "Relative_Humidity_pct",
-        "Transit_Elapsed_Hours",
-        "Expected_Transit_Remaining_Hours",
-        "Hours_Above_Product_Temp_Threshold",
-        "Unplanned_Delay_Hours",
-        "Dispatch_Month"
-    ]
-
-    st.write(features)
-
-    st.divider()
 
 
